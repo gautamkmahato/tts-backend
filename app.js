@@ -18,7 +18,9 @@ app.use("/assets", express.static("public/assets"));
 
 // routes
 app.use('/api/v1/audio', audioRoute);
-
+app.get('/', (req, res) =>{
+  res.send('hello world')
+})
 
 
 const PORT = process.env.PORT || 5000;
