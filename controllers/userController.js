@@ -1,13 +1,18 @@
+import supabase from "../configs/supabaseConfig.js";
+import generateUuid from "../utils/generateUuid.js";
+
+
 export default async function addUser(req, res) {
     const inputData = req.body;
-  
+   
     console.log(inputData)
+    const uuid = generateUuid();
   
     try {
         const { data, error } = await supabase
         .from('users')
         .insert([
-          { id: inputData.id, username: inputData.username, email: inputData.email, full_name: inputData.fullName, image: inputData.image },
+          { id: uuid, clerk_id: inputData.id, username: inputData.username, email: inputData.email, full_name: inputData.fullName, image: inputData.image },
         ])
         .select()
           

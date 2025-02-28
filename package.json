@@ -11,13 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.48.1",
+    "@supabase/supabase-js": "^2.49.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "ftp-srv": "^4.6.3",
     "ml-regression": "^6.2.0",
     "node-fetch": "^3.3.2",
-    "ssh2": "^1.16.0"
+    "ssh2": "^1.16.0",
+    "uuid": "^11.1.0"
   }
 }
