@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import audioRoute from './routes/audioRoute.js'
 import userRoute from './routes/userRoute.js'
+import paymentRoute from './routes/paymentRoute.js'
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/assets", express.static("public/assets"));
 // routes
 app.use('/api/v1/audio', audioRoute);
 app.use('/api/v1/user', userRoute);
+app.use('/api/v1/payment', paymentRoute);
 app.get('/', (req, res) =>{
   res.send('hello world user test')
 })
