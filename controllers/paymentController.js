@@ -8,6 +8,8 @@ export default async function paymentController(req, res) {
     try {
         const { userId, email, priceId } = req.body;
 
+        console.log(userId, email, priceId)
+
         if (!priceId || !userId || !email) {
             return res.status(400).json({ error: 'Missing priceId or userId or email' });
         }
@@ -18,11 +20,15 @@ export default async function paymentController(req, res) {
 
         // Step 2: Create customer if not found
         if (!customer) {
+            console.log("inside customer creation")
             customer = await stripe.customers.create({
                 email,
                 metadata: { userId },
             });
         }
+        console.log("**************************")
+        console.log(customer)
+        console.log("**************************")
 
         // Step 3: Create a checkout session for the customer
         const session = await stripe.checkout.sessions.create({
@@ -39,8 +45,10 @@ export default async function paymentController(req, res) {
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/cancel`,
         });
-
+        
+        console.log("==================================")
         console.log(session)
+        console.log("==================================")
 
         res.json({ success: true, sessionUrl: session.url })
 
@@ -119,7 +127,7 @@ export async function paymentWebhook(req, res) {
                 invoice_id: invoice?.id || null,
                 receipt_url: charge?.receipt_url || null,
                 payment_intent_id: intent?.payment_intent || null,
-            });
+            }); 
 
             if (error) {
                 console.error("❌ Failed to save payment:", error);
@@ -134,5 +142,29 @@ export async function paymentWebhook(req, res) {
     }
 
     res.status(200).json({ received: true, message: "Payment successful, data saved in DB" });
+}
+
+export async function getPaymentStatus(req, res) {
+    const {userId} = req.body;
+
+    try{
+        
+        let { data, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('clerk_id', userId)
+
+        if(error){
+            res.status(500).json({status: false, message: 'userId does not exists in DB'})
+        }
+
+        console.log(data);
+
+        res.status(200).json({status: true, data: data})
+
+    } catch(err){
+        console.log(err)
+        res.status(500).json({status: false, message: 'Internal Server error', err})
+    }
 }
 
